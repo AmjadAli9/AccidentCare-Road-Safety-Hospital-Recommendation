@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Performance Analysis</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+   <link rel="stylesheet" href="styles3.css">
+</head>
+<body>
+
+    <h1>Performance Analysis</h1>
+
+    <div class="container">
+        <h2>Algorithm Performance Comparison</h2>
+        <canvas id="performanceChart"></canvas>
+
+        <h2>Performance Table</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Algorithm</th>
+                    <th>Accuracy</th>
+                    <th>Precision</th>
+                    <th>Recall</th>
+                    <th>F1-Score</th>
+                </tr>
+            </thead>
+            <tbody id="performanceTable">
+                <!-- Data will be inserted dynamically -->
+            </tbody>
+        </table>
+    </div>
+    <script src="script2.js"></script>
+</body>
+</html>

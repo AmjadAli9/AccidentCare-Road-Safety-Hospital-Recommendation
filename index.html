@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AccidentCare | Road Safety & Hospital Recommendation</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="logo">🚑 AccidentCare</div>
+        <ul>
+            <li><a href="#about">About</a></li>
+            <li><a href="#services">Services</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="overlay"></div>
+        <div class="hero-content">
+            <h1>Redefining Road Safety</h1>
+            <p>Advanced AI-Powered Accident Analysis & Hospital Recommendations</p>
+            <a href="#services" class="btn">Explore Services</a>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <h2>About AccidentCare</h2>
+        <p>We are on a mission to save lives. AccidentCare harnesses the power of AI and real-time data to revolutionize emergency response. From instant accident severity detection to smart hospital recommendations, our platform ensures faster, smarter, and more effective care when it matters most.</p>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="services">
+        <h2>Our Services</h2>
+        <div class="service-container">
+            <div class="service-card" onclick="location.href='severity.html'">
+                <h3>🚨 Accident Severity Detection</h3>
+                <p>Analyze accident images and videos with AI to determine injury severity in seconds.</p>
+            </div>
+            <div class="service-card" onclick="location.href='hospital.html'">
+                <h3>🏥 Hospital Recommendations</h3>
+                <p>Get real-time suggestions for the best nearby hospitals based on accident data.</p>
+            </div>
+            <div class="service-card" onclick="location.href='performance.html'">
+                <h3>📊 Performance Analytics</h3>
+                <p>Track model accuracy, response time, and efficiency with real-time metrics.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <h2>Contact Us</h2>
+        <form>
+            <input type="text" placeholder="Your Name" required>
+            <input type="email" placeholder="Your Email" required>
+            <textarea placeholder="Your Message" required></textarea>
+            <button type="submit" class="btn">Send Message</button>
+        </form>
+    </section>
+
+    <footer>
+        <p>© 2025 AccidentCare. All Rights Reserved.</p>
+    </footer>
+</body>
+</html>
