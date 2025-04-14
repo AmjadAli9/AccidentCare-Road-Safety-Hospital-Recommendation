@@ -22,13 +22,23 @@
             <button class="btn" onclick="analyzeSeverity()">🔍 Analyze</button>
         </div>
 
-        <div id="result"></div>
+        <div id="previewContainer"></div>
+        <div id="result" style="display: none;">
+            <h3>Analysis Result:</h3>
+            <p id="severity"></p>
+            <p id="injuryType"></p>
+            <p id="treatmentSteps"></p>
+
+            <!-- Additional Action Buttons -->
+            <button class="btn" onclick="openHospitalPage()">🏥 Find Hospital</button>
+            <button class="btn" onclick="callEmergency()">🚑 Call Emergency</button>
+        </div>
     </section>
 
     <footer>
         <p>© 2025 AccidentCare. All Rights Reserved.</p>
     </footer>
 
-    <script src="script.js"></script>
+    <script src="script3.js"></script>
 </body>
 </html>
