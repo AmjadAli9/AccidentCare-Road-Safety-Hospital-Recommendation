@@ -1,11 +1,11 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Hospital Recommendations | AccidentCare</title>
-    <link rel="stylesheet" href="styles2.css">
+    <link rel="stylesheet" href="styles2.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 </head>
 <body>
     <!-- Navigation -->
@@ -19,14 +19,18 @@
         <p>Instantly locate the best hospitals nearby for emergency care.</p>
 
         <button class="btn" onclick="findHospital()">📍 Get Hospitals Near Me</button>
+        <button class="btn emergency" onclick="callEmergency()">📞 Call Emergency</button>
 
         <div id="hospitalList"></div>
+
+        <div id="map"></div>
     </section>
 
     <footer>
         <p>© 2025 AccidentCare. All Rights Reserved.</p>
     </footer>
 
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
