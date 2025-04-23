@@ -113,3 +113,44 @@ function openHospitalPage() {
 function callEmergency() {
     window.location.href = "tel:108";  // Dial 108 for emergency services in India
 }
+// Enhanced analysis function
+async function analyzeMedia(file) {
+    const formData = new FormData();
+    formData.append('file', file);
+    
+    try {
+      // Show loading progress
+      const progress = document.createElement('div');
+      progress.className = 'progress-bar';
+      previewContainer.appendChild(progress);
+      
+      // Use Fetch API with progress tracking
+      const response = await fetch('https://your-ai-api.com/analyze', {
+        method: 'POST',
+        body: formData,
+        signal: AbortSignal.timeout(30000)
+      });
+      
+      const data = await response.json();
+      
+      // Multiple injury detection display
+      data.injuries.forEach(injury => {
+        displayInjuryResult(injury);
+      });
+      
+      // Confidence indicator
+      const confidence = document.createElement('div');
+      confidence.innerHTML = `AI Confidence: ${data.confidence}%`;
+      resultDiv.appendChild(confidence);
+      
+    } catch (error) {
+      console.error('Analysis error:', error);
+    }
+  }
+  
+  // Add to your file input handler
+  fileInput.addEventListener('change', async (event) => {
+    const files = Array.from(event.target.files);
+    const analysisPromises = files.map(file => analyzeMedia(file));
+    await Promise.all(analysisPromises);
+  });
