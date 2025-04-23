@@ -1,4 +1,5 @@
 
+// Sample Data (Replace with real data from Python)
 const algorithms = ["CNN", "SVM", "Decision Tree", "Random Forest"];
 const accuracy = [0.95, 0.88, 0.83, 0.91]; 
 const precision = [0.93, 0.86, 0.81, 0.89]; 
