@@ -1,12 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- PWA Configuration -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#2b3f66">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="AccidentCare">
+    <link rel="apple-touch-icon" href="/icons/icon-152x152.png">
+    <meta name="msapplication-TileImage" content="/icons/icon-144x144.png">
+    <meta name="msapplication-TileColor" content="#2b3f66">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AccidentCare | Road Safety & Hospital Recommendation</title>
     <meta name="description" content="AccidentCare is dedicated to providing AI-powered accident severity detection and real-time hospital recommendations for road accidents.">
     <link rel="stylesheet" href="styles.css">
-    <link rel="icon" href="accident care.webp"> <!-- Add favicon -->
+    <link rel="icon" href="accident care.webp"> <!-- Favicon -->
 </head>
 <body>
     <!-- Navigation -->
@@ -26,7 +35,7 @@
             <h1>Redefining Road Safety</h1>
             <p>Advanced AI-Powered Accident Analysis & Hospital Recommendations</p>
             <a href="#services" class="btn">Explore Services</a>
-            <div class="motto">"Ensuring Fast, Effective, and Lifesaving Emergency Response"</div> <!-- Added Motto -->
+            <div class="motto">"Ensuring Fast, Effective, and Lifesaving Emergency Response"</div>
         </div>
     </section>
 
@@ -66,6 +75,25 @@
         </form>
     </section>
 
+    <!-- QR Code Modal -->
+    <div id="qrModal" class="qr-modal">
+        <div class="qr-modal-content">
+            <span class="qr-close">&times;</span>
+            <h3>Scan to Install</h3>
+            <div id="qrCode"></div>
+            <p>Scan this QR code with your phone's camera to install AccidentCare</p>
+            <div class="qr-instructions">
+                <p><strong>After scanning:</strong></p>
+                <ol>
+                    <li>Open the link in your browser</li>
+                    <li>Look for the "Add to Home Screen" prompt</li>
+                    <li>Or tap the share icon and select "Install"</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
     <footer>
         <p>© 2025 AccidentCare. All Rights Reserved.</p>
         <div class="footer-links">
@@ -73,5 +101,80 @@
             <a href="/terms-of-service">Terms of Service</a>
         </div>
     </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
+    <script>
+        // Service Worker Registration
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then(registration => {
+                        console.log('ServiceWorker registration successful');
+                        registration.addEventListener('updatefound', () => {
+                            const newWorker = registration.installing;
+                            newWorker.addEventListener('statechange', () => {
+                                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                    console.log('New content available; please refresh.');
+                                }
+                            });
+                        });
+                    })
+                    .catch(err => console.error('ServiceWorker registration failed:', err));
+            });
+        }
+
+        // Track PWA Installation
+        window.addEventListener('appinstalled', () => {
+            console.log('App was installed');
+        });
+
+        // Handle Before Install Prompt
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            console.log('PWA install prompt available');
+        });
+
+        // QR Code Installation
+        function showQRInstall() {
+            const modal = document.getElementById('qrModal');
+            const qrCodeDiv = document.getElementById('qrCode');
+
+            // Generate QR Code
+            const qr = qrcode(0, 'L');
+            qr.addData(window.location.href);
+            qr.make();
+            qrCodeDiv.innerHTML = qr.createImgTag(4);
+
+            // Show modal
+            modal.style.display = 'block';
+
+            // Close modal when clicking X
+            document.querySelector('.qr-close').onclick = () => {
+                modal.style.display = 'none';
+            };
+
+            // Close modal when clicking outside
+            window.onclick = (event) => {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            };
+        }
+
+        // Add QR Code Button to Footer
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                const footer = document.querySelector('footer');
+                const qrButton = document.createElement('button');
+                qrButton.className = 'btn';
+                qrButton.textContent = '📱 Get Mobile App';
+                qrButton.onclick = showQRInstall;
+                footer.insertBefore(qrButton, footer.firstChild);
+            }
+        });
+    </script>
 </body>
 </html>
