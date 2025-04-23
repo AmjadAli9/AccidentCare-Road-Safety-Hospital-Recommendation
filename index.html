@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Meta Configuration -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AccidentCare | Road Safety & Hospital Recommendation</title>
+    <meta name="description" content="AccidentCare is dedicated to providing AI-powered accident severity detection and real-time hospital recommendations for road accidents.">
+    
     <!-- PWA Configuration -->
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#2b3f66">
@@ -10,14 +16,13 @@
     <link rel="apple-touch-icon" href="/icons/icon-152x152.png">
     <meta name="msapplication-TileImage" content="/icons/icon-144x144.png">
     <meta name="msapplication-TileColor" content="#2b3f66">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AccidentCare | Road Safety & Hospital Recommendation</title>
-    <meta name="description" content="AccidentCare is dedicated to providing AI-powered accident severity detection and real-time hospital recommendations for road accidents.">
+
+    <!-- Favicon & CSS -->
+    <link rel="icon" href="accident care.webp">
     <link rel="stylesheet" href="styles.css">
-    <link rel="icon" href="accident care.webp"> <!-- Favicon -->
 </head>
 <body>
+
     <!-- Navigation -->
     <nav>
         <div class="logo">🚑 AccidentCare</div>
@@ -105,101 +110,67 @@
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
     <script>
-        // Service Worker Registration
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/service-worker.js')
-                    .then(registration => {
-                        console.log('ServiceWorker registration successful');
-                        registration.addEventListener('updatefound', () => {
-                            const newWorker = registration.installing;
-                            newWorker.addEventListener('statechange', () => {
-                                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                                    console.log('New content available; please refresh.');
-                                }
-                            });
-                        });
-                    })
-                    .catch(err => console.error('ServiceWorker registration failed:', err));
-            });
-        }
-
-        // Track PWA Installation
-        window.addEventListener('appinstalled', () => {
-            console.log('App was installed');
-        });
-
-        // Handle Before Install Prompt
         let deferredPrompt;
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            console.log('PWA install prompt available');
-        });
 
-        // QR Code Installation
-        function showQRInstall() {
-            const modal = document.getElementById('qrModal');
-            const qrCodeDiv = document.getElementById('qrCode');
-
-            // Generate QR Code
-            const qr = qrcode(0, 'L');
-            qr.addData(window.location.href);
-            qr.make();
-            qrCodeDiv.innerHTML = qr.createImgTag(4);
-
-            // Show modal
-            modal.style.display = 'block';
-
-            // Close modal when clicking X
-            document.querySelector('.qr-close').onclick = () => {
-                modal.style.display = 'none';
-            };
-
-            // Close modal when clicking outside
-            window.onclick = (event) => {
-                if (event.target === modal) {
-                    modal.style.display = 'none';
-                }
-            };
+        // Register Service Worker
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/service-worker.js')
+                .then(() => console.log('SW registered'))
+                .catch(console.error);
         }
 
-        // Add QR Code Button to Footer
-        document.addEventListener('DOMContentLoaded', () => {
-            if (!/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-                const footer = document.querySelector('footer');
-                const qrButton = document.createElement('button');
-                qrButton.className = 'btn';
-                qrButton.textContent = '📱 Get Mobile App';
-                qrButton.onclick = showQRInstall;
-                footer.insertBefore(qrButton, footer.firstChild);
-            }
-        });
-
-        // Install Button Logic
+        // Handle install prompt
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
 
             const installButton = document.createElement('button');
+            installButton.className = 'btn';
             installButton.id = 'installButton';
-            installButton.className = 'btn install-btn';
-            installButton.innerHTML = '📱 Install App';
+            installButton.textContent = '📱 Install App';
             document.querySelector('footer').prepend(installButton);
 
             installButton.addEventListener('click', async () => {
                 installButton.style.display = 'none';
                 deferredPrompt.prompt();
                 const { outcome } = await deferredPrompt.userChoice;
-                console.log(`User response to the install prompt: ${outcome}`);
+                console.log(`User response: ${outcome}`);
                 deferredPrompt = null;
             });
         });
 
+        // App installed event
         window.addEventListener('appinstalled', () => {
-            const installButton = document.getElementById('installButton');
-            if (installButton) installButton.style.display = 'none';
+            const btn = document.getElementById('installButton');
+            if (btn) btn.style.display = 'none';
             console.log('PWA was installed');
+        });
+
+        // QR code installation modal
+        function showQRInstall() {
+            const modal = document.getElementById('qrModal');
+            const qrCodeDiv = document.getElementById('qrCode');
+
+            const qr = qrcode(0, 'L');
+            qr.addData(window.location.href);
+            qr.make();
+            qrCodeDiv.innerHTML = qr.createImgTag(4);
+            modal.style.display = 'block';
+
+            document.querySelector('.qr-close').onclick = () => modal.style.display = 'none';
+            window.onclick = (event) => {
+                if (event.target === modal) modal.style.display = 'none';
+            };
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                const qrButton = document.createElement('button');
+                qrButton.className = 'btn';
+                qrButton.textContent = '📱 Get Mobile App';
+                qrButton.onclick = showQRInstall;
+                document.querySelector('footer').prepend(qrButton);
+            }
         });
     </script>
 </body>
