@@ -110,43 +110,51 @@
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
     <script>
-        let deferredPrompt;
+        let deferredPrompt = null;
 
         // Register Service Worker
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('/service-worker.js')
-                .then(() => console.log('SW registered'))
-                .catch(console.error);
+                .then(() => console.log('Service Worker registered'))
+                .catch(err => console.error('Service Worker registration failed:', err));
         }
 
-        // Handle install prompt
+        // Handle beforeinstallprompt event
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
+            console.log('Install prompt saved for later use.');
+        });
 
-            const installButton = document.createElement('button');
-            installButton.className = 'btn';
-            installButton.id = 'installButton';
-            installButton.textContent = '📱 Install App';
-            document.querySelector('footer').prepend(installButton);
+        // Show install button after user interaction
+        document.addEventListener('DOMContentLoaded', () => {
+            const installBtn = document.createElement('button');
+            installBtn.textContent = '📲 Install AccidentCare';
+            installBtn.className = 'btn install-cta';
+            installBtn.style.position = 'fixed';
+            installBtn.style.bottom = '20px';
+            installBtn.style.right = '20px';
+            installBtn.style.zIndex = '9999';
+            installBtn.style.padding = '12px 20px';
+            installBtn.style.background = '#2b3f66';
+            installBtn.style.color = '#fff';
+            installBtn.style.border = 'none';
+            installBtn.style.borderRadius = '8px';
+            installBtn.style.boxShadow = '0 0 20px rgba(0,0,0,0.4)';
+            installBtn.style.cursor = 'pointer';
 
-            installButton.addEventListener('click', async () => {
-                installButton.style.display = 'none';
+            document.body.appendChild(installBtn);
+
+            installBtn.addEventListener('click', async () => {
+                installBtn.remove();
                 deferredPrompt.prompt();
                 const { outcome } = await deferredPrompt.userChoice;
-                console.log(`User response: ${outcome}`);
+                console.log(`Install prompt result: ${outcome}`);
                 deferredPrompt = null;
             });
         });
 
-        // App installed event
-        window.addEventListener('appinstalled', () => {
-            const btn = document.getElementById('installButton');
-            if (btn) btn.style.display = 'none';
-            console.log('PWA was installed');
-        });
-
-        // QR code installation modal
+        // QR Code logic
         function showQRInstall() {
             const modal = document.getElementById('qrModal');
             const qrCodeDiv = document.getElementById('qrCode');
@@ -163,14 +171,20 @@
             };
         }
 
+        // Add QR button for desktop users
         document.addEventListener('DOMContentLoaded', () => {
-            if (!/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+            if (!/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
                 const qrButton = document.createElement('button');
                 qrButton.className = 'btn';
                 qrButton.textContent = '📱 Get Mobile App';
                 qrButton.onclick = showQRInstall;
                 document.querySelector('footer').prepend(qrButton);
             }
+        });
+
+        // App installed event
+        window.addEventListener('appinstalled', () => {
+            console.log('PWA successfully installed');
         });
     </script>
 </body>
