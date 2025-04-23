@@ -2,18 +2,19 @@
 <html lang="en">
 <head>
     <!-- PWA Configuration -->
-<link rel="manifest" href="/manifest.json">
-<meta name="theme-color" content="#2b3f66">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="AccidentCare">
-<link rel="apple-touch-icon" href="/icons/icon-152x152.png">
-<meta name="msapplication-TileImage" content="/icons/icon-144x144.png">
-<meta name="msapplication-TileColor" content="#2b3f66">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#2b3f66">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="AccidentCare">
+    <link rel="apple-touch-icon" href="/icons/icon-152x152.png">
+    <meta name="msapplication-TileImage" content="/icons/icon-144x144.png">
+    <meta name="msapplication-TileColor" content="#2b3f66">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Accident Severity Detection | AccidentCare</title>
-    <link rel="stylesheet" href="styles2.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css">
+    <link rel="stylesheet" href="styles3.css">
 </head>
 <body>
     <!-- Navigation -->
@@ -24,23 +25,74 @@
     <!-- Upload Section -->
     <section class="upload-section">
         <h2>🚨 Analyze Accident Severity</h2>
-        <p>Upload an image or video, and let our AI determine the severity in real time.</p>
+        <p>Capture or upload media to assess injury severity in real time</p>
         
         <div class="upload-box">
-            <input type="file" id="fileInput" accept="image/*,video/*">
-            <button class="btn" onclick="analyzeSeverity()">🔍 Analyze</button>
+            <div class="upload-options">
+                <div class="option-row">
+                    <button class="btn camera-btn" onclick="openCamera()">
+                        📷 Open Camera
+                    </button>
+                    <label for="fileInput" class="btn upload-btn">
+                        📁 Upload File
+                    </label>
+                    <input type="file" id="fileInput" accept="image/*,video/*">
+                </div>
+                <div class="or-divider">OR</div>
+                <button class="btn" onclick="openSampleCases()">
+                    🧪 Try Sample Cases
+                </button>
+            </div>
+            
+            <div id="cameraContainer">
+                <video id="cameraPreview" autoplay playsinline></video>
+                <div class="camera-controls">
+                    <button class="btn switch-btn" onclick="switchCamera()">
+                        🔄 Switch Camera
+                    </button>
+                    <button class="btn flash-btn" onclick="toggleFlash()">
+                        ✨ Flash Off
+                    </button>
+                    <button class="btn capture-btn" onclick="capturePhoto()">
+                        📸 Capture
+                    </button>
+                    <button class="btn cancel-btn" onclick="closeCamera()">
+                        ✖ Cancel
+                    </button>
+                </div>
+            </div>
+            
+            <div id="cropperModal">
+                <div id="cropperContainer" style="width: 90%; max-width: 500px; height: 400px;"></div>
+                <div class="cropper-actions">
+                    <button class="btn" onclick="cropImage()">✓ Crop</button>
+                    <button class="btn cancel-btn" onclick="cancelCrop()">✖ Cancel</button>
+                </div>
+            </div>
+            
+            <div id="previewContainer"></div>
+            
+            <div class="progress-container">
+                <div class="progress-bar"></div>
+                <div class="progress-text">Analyzing: 0%</div>
+            </div>
+            
+            <button id="analyzeBtn" class="btn analyze-btn" onclick="analyzeSeverity()" disabled>
+                🔍 Analyze Media
+            </button>
         </div>
 
-        <div id="previewContainer"></div>
-        <div id="result" style="display: none;">
+        <div id="result">
             <h3>Analysis Result:</h3>
             <p id="severity"></p>
             <p id="injuryType"></p>
             <p id="treatmentSteps"></p>
 
             <!-- Additional Action Buttons -->
-            <button class="btn" onclick="openHospitalPage()">🏥 Find Hospital</button>
-            <button class="btn" onclick="callEmergency()">🚑 Call Emergency</button>
+            <div class="option-row">
+                <button class="btn" onclick="openHospitalPage()">🏥 Find Hospital</button>
+                <button class="btn emergency" onclick="callEmergency()">🚑 Call Emergency</button>
+            </div>
         </div>
     </section>
 
@@ -48,45 +100,7 @@
         <p>© 2025 AccidentCare. All Rights Reserved.</p>
     </footer>
 
-    <script src="script3.js"></script>
-    <script>
-        // Register Service Worker
-        if ('serviceWorker' in navigator) {
-          window.addEventListener('load', () => {
-            navigator.serviceWorker.register('/service-worker.js')
-              .then(registration => {
-                console.log('ServiceWorker registration successful');
-                
-                // Check for updates
-                registration.addEventListener('updatefound', () => {
-                  const newWorker = registration.installing;
-                  newWorker.addEventListener('statechange', () => {
-                    if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                      console.log('New content available; please refresh.');
-                      // You could show a "Update Available" notification here
-                    }
-                  });
-                });
-              })
-              .catch(err => {
-                console.log('ServiceWorker registration failed: ', err);
-              });
-          });
-        }
-        
-        // Track PWA installation
-        window.addEventListener('appinstalled', (evt) => {
-          console.log('App was installed');
-        });
-        
-        // Track beforeinstallprompt for custom install button
-        let deferredPrompt;
-        window.addEventListener('beforeinstallprompt', (e) => {
-          e.preventDefault();
-          deferredPrompt = e;
-          console.log('PWA install prompt available');
-          // You could show your own install button here
-        });
-        </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+  <script src="script3.js"></script>
 </body>
 </html>
